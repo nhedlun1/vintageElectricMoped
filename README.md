@@ -1,7 +1,8 @@
 # vintageElectricMoped
+<p align="center">
 The story of how a vintage moped got a new electrified life! 
-![Completed](pictures/side_view.jpg)
-
+<img src="pictures/side_view.jpg" width="650" class="center">
+</p>
 
 Almost two years ago i got the idea to convert an old 70's two-stroke moped to electric power. 
 Now, two years later, and not too many iterations of my ideas it's finished! Or almost at least.. 
