@@ -1,4 +1,3 @@
-# vintageElectricMoped
 <p align="center">
 The story of how a vintage moped got a new electrified life! 
 <img src="pictures/side_view.jpg" width="650" class="center">
