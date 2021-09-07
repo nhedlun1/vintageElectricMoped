@@ -25,7 +25,6 @@ motor would fit inside the motor case, a simple adapter plate in aluminium holds
 <br>
 <br>
 <br>
-<br>
 <p align="center">
 The electric motor is driven by a BLDC motor controller which offers a lot of settings and also CAN-communication.
 I'm getting the throttle signal from the regular wire throttle handle, however i've modified the carburetor "slightly".
