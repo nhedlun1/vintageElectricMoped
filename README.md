@@ -29,13 +29,16 @@ motor would fit inside the motor case, a simple adapter plate in aluminium holds
 <br>
 <br>
 <p>
-<img src="pictures/motor_controller.jpg" width="340" align="left"><img src="pictures/throttle_slide.jpg" width="340" align="left"> 
 </p>
+
+<img src="pictures/motor_controller.jpg" width="340" align="left"><img src="pictures/throttle_slide.jpg" width="340" align="right"> 
+<p align="center">
 The electric motor is driven by a BLDC motor controller which offers a lot of settings and also CAN-communication.
 I'm getting the throttle signal from the regular wire throttle handle, however i've modified the carburetor "slightly".
 The throttle slide is now 3d printed and instead of a needle letting fuel inside the cylinder, there is now a magnet in it's place. 
 This magnet affects the linear hall effect sensor which is mounted in the bottom of the carburetor, which in turn gives a analog 
 signal based on the amount of flux it's picking up, this analog signal is read by the motor controller as the input throttle signal.
+</p>
 <br>
 <br>
 <br>
