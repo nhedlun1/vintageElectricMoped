@@ -25,6 +25,7 @@ motor would fit inside the motor case, a simple adapter plate in aluminium holds
 <br>
 <br>
 <br>
+<br>
 
 <p align="center">
 The electric motor is driven by a BLDC motor controller which offers a lot of settings and also CAN-communication.
@@ -72,8 +73,9 @@ but also due to it's ease of use in these simple cases.
 <br>
 
 So what about the fun info? How fast does it go, and how far can you drive? Well, the speed is not that exciting, with the maximum gearing 
-i can reach somwhere around 40-45km/h, but this runs the motor quite hot so with more moderate gearing i reach around 30-35km/h and then it 
-also has a bit of a kick to it acceleration wise. As far as the range, i cannot really say for sure, however in the initial testing phase, 
+i can reach somwhere around 40-45km/h, but this runs the motor quite hot so without any way of measuring the motor temperature right now
+i am going with more moderate gearing with which i reach around 30-35km/h and then it also has a bit of a kick to it acceleration wise.
+As far as the range, i cannot really say for sure since i havent dared to try due to not measuring temperature, however in the initial testing phase, 
 i got at least 10km of range with a 5Ah battery, so i should get a range of at least 40km. So in other words, not that bad right?
 <br>
 <br>
