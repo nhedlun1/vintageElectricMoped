@@ -5,8 +5,8 @@ The story of how a vintage moped got a new electrified life!
 </p>
 
 <p align="center">
-Almost two years ago i got the idea to convert an old 70's two-stroke moped to electric power. 
-Now, two years later, and not too many iterations of my ideas it's finished! Or almost at least.. 
+In the beginning of 2020 i got the idea to convert an old 70's two-stroke moped to electric power. 
+Now, two years later, and not too many iterations of my ideas it's finished! More or less finished anyway! :) 
 </p>
 <br>
 <br>
@@ -24,7 +24,7 @@ motor would fit inside the motor case, a simple adapter plate in aluminium holds
 <br>
 <br>
 <br>
-
+<br>
 
 <p align="center">
 The electric motor is driven by a BLDC motor controller which offers a lot of settings and also CAN-communication.
