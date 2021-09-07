@@ -12,7 +12,7 @@ Now, two years later, and not too many iterations of my ideas it's finished! Mor
 <br>
 
 <p>
-<img src="pictures/motor_without_cover.jpg" width="315" align="left"><img src="pictures/elec_motor_in.jpg" width="315" align="right">
+<img src="pictures/motor_without_cover.jpg" width="330" align="left"><img src="pictures/elec_motor_in.jpg" width="330" align="right">
 
 <p align="center">
 Basically i fitted an electric skateboard motor inside the old two-stroke motor, leaving the 2-speed gearbox.
