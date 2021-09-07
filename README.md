@@ -20,15 +20,14 @@ I chopped off the old crankshaft axle and drilled a hole in the shaft so that th
 would fit directly into it. I then removed enough material from one of the motor blocks so the eletric
 motor would fit inside the motor case, a simple adapter plate in aluminium holds the BLDC motor in place. 
 </p>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 </p>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+
 <p align="center">
 The electric motor is driven by a BLDC motor controller which offers a lot of settings and also CAN-communication.
 I'm getting the throttle signal from the regular wire throttle handle, however i've modified the carburetor "slightly".
