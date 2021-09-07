@@ -1,10 +1,11 @@
-<p align="center">
-The story of how a vintage moped got a new electrified life! 
+<h1 align="center">
+The story of how a vintage moped got a new electrified life!
 <br><br>
 <img src="pictures/side_view.jpg" width="650" class="center">
-</p>
+</h1>
 
 <p align="center">
+<br>
 In the beginning of 2020 i got the idea to convert an old 70's two-stroke moped to electric power. 
 Now, two years later, and not too many iterations of my ideas it's finished! More or less finished anyway! :) 
 </p>
@@ -87,10 +88,10 @@ Youtube clip:
 <br>
 <br>
 Future plans and improvements:<br>
-Custom PCB with a esp32 as microcontroller, this is mainly to try to get BMS information and display it.<br>
-More outputs for lights, and also a on/off signal relay for the motor controller. <br>
-A loud buzzer as horn mounted on the pcb.<br>
-Motor temperature sensor, the excisting one is not compatible with motor controller. I probably will mount external one.<br>
+-[ ]Custom PCB with a esp32 as microcontroller, this is mainly to try to get BMS information and display it.<br>
+-[ ] ]More outputs for lights, and also a on/off signal relay for the motor controller. <br>
+-[ ]A loud buzzer as horn mounted on the pcb.<br>
+-[ ]Motor temperature sensor, the excisting one is not compatible with motor controller. I probably will mount external one.<br>
 
 <br>
 <br>
