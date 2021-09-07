@@ -75,6 +75,15 @@ So what about the fun info? How fast does it go, and how far can you drive? Well
 i can reach somwhere around 40-45km/h, but this runs the motor quite hot so with more moderate gearing i reach around 30-35km/h and then it 
 also has a bit of a kick to it acceleration wise. As far as the range, i cannot really say for sure, however in the initial testing phase, 
 i got at least 10km of range with a 5Ah battery, so i should get a range of at least 40km. So in other words, not that bad right?
+<br>
+<br>
+
+<p align="center">
+Youtube clip:
+</p>
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=hFOQdgR-VeI"><img src="https://img.youtube.com/vi/hFOQdgR-VeI/0.jpg" alt="Vintage Crescent moped converted to electric"></a>
+</div>
 
 <br>
 <br>
