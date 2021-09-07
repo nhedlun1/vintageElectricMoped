@@ -11,7 +11,7 @@ Now, two years later, and not too many iterations of my ideas it's finished! Mor
 <br>
 <br>
 <p>
-<img src="pictures/motor_without_cover.jpg" width="300" align="left"><img src="pictures/elec_motor_in.jpg" width="300" align="right">
+<img src="pictures/motor_without_cover.jpg" width="315" align="left"><img src="pictures/elec_motor_in.jpg" width="315" align="right">
 </p>
 <p align="center">
 Basically i fitted an electric skateboard motor inside the old two-stroke motor, leaving the 2-speed gearbox.
@@ -24,7 +24,8 @@ motor would fit inside the motor case, a simple adapter plate in aluminium holds
 <br>
 <br>
 <br>
-
+<br>
+<br>
 <p align="center">
 The electric motor is driven by a BLDC motor controller which offers a lot of settings and also CAN-communication.
 I'm getting the throttle signal from the regular wire throttle handle, however i've modified the carburetor "slightly".
