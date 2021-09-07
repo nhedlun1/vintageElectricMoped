@@ -25,6 +25,8 @@ motor would fit inside the motor case, a simple adapter plate in aluminium holds
 <br>
 <br>
 <br>
+<br>
+<br>
 </p>
 
 <p align="center">
