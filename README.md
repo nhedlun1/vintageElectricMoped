@@ -90,7 +90,7 @@ Youtube clip:
 <br>
 Future plans and improvements:<br>
 -[ ]Custom PCB with a esp32 as microcontroller, this is mainly to try to get BMS information and display it.<br>
--[ ] ]More outputs for lights, and also a on/off signal relay for the motor controller. <br>
+-[ ]More outputs for lights, and also a on/off signal relay for the motor controller. <br>
 -[ ]A loud buzzer as horn mounted on the pcb.<br>
 -[ ]Motor temperature sensor, the excisting one is not compatible with motor controller. I probably will mount external one.<br>
 
