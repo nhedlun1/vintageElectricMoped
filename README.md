@@ -81,7 +81,7 @@ i got at least 10km of range with a 5Ah battery, so i should get a range of at l
 Youtube clip:
 </p>
 <div align="center">
-  <a href="https://www.youtube.com/watch?v=hFOQdgR-VeI"><img src="https://img.youtube.com/vi/hFOQdgR-VeI/0.jpg" alt="Vintage Crescent moped converted to electric"></a>
+  <a href="https://www.youtube.com/watch?v=hFOQdgR-VeI"><img src="pictures/youtube_thumb.jpg" alt="Vintage Crescent moped converted to electric"></a>
 </div>
 
 <br>
