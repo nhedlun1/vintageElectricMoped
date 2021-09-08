@@ -6,8 +6,9 @@ The story of how a vintage moped got a new electrified life!
 
 <p align="center">
 <br>
-In the beginning of 2020 i got the idea to convert an old 70's two-stroke moped to electric power. 
-Now, two years later, and not too many iterations of my ideas it's finished! More or less finished anyway! :) 
+In 2019 i got the idea to convert an old 70's two-stroke moped to electric power without loosing the
+look of an old two stroke moped. I bought and old worn Crescent moped early 2020 and got to work! 
+Over a year later, and not too many iterations of my ideas it's finished! More or less anyway! :) 
 </p>
 <br>
 <br>
