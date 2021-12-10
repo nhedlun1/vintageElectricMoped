@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+/home/nhed/Documents/PlatformIO/Projects/e_moped_com_unit/build/CMakeFiles/bootloader
+/home/nhed/Documents/PlatformIO/Projects/e_moped_com_unit/build/CMakeFiles/bootloader.rule
+/home/nhed/Documents/PlatformIO/Projects/e_moped_com_unit/build/CMakeFiles/bootloader-complete.rule
+/home/nhed/Documents/PlatformIO/Projects/e_moped_com_unit/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+/home/nhed/Documents/PlatformIO/Projects/e_moped_com_unit/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+/home/nhed/Documents/PlatformIO/Projects/e_moped_com_unit/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+/home/nhed/Documents/PlatformIO/Projects/e_moped_com_unit/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
+/home/nhed/Documents/PlatformIO/Projects/e_moped_com_unit/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+/home/nhed/Documents/PlatformIO/Projects/e_moped_com_unit/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+/home/nhed/Documents/PlatformIO/Projects/e_moped_com_unit/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule

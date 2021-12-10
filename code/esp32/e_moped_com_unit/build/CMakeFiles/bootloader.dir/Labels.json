@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/nhed/Documents/PlatformIO/Projects/e_moped_com_unit/build/CMakeFiles/bootloader"
+		},
+		{
+			"file" : "/home/nhed/Documents/PlatformIO/Projects/e_moped_com_unit/build/CMakeFiles/bootloader.rule"
+		},
+		{
+			"file" : "/home/nhed/Documents/PlatformIO/Projects/e_moped_com_unit/build/CMakeFiles/bootloader-complete.rule"
+		},
+		{
+			"file" : "/home/nhed/Documents/PlatformIO/Projects/e_moped_com_unit/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule"
+		},
+		{
+			"file" : "/home/nhed/Documents/PlatformIO/Projects/e_moped_com_unit/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule"
+		},
+		{
+			"file" : "/home/nhed/Documents/PlatformIO/Projects/e_moped_com_unit/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule"
+		},
+		{
+			"file" : "/home/nhed/Documents/PlatformIO/Projects/e_moped_com_unit/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule"
+		},
+		{
+			"file" : "/home/nhed/Documents/PlatformIO/Projects/e_moped_com_unit/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule"
+		},
+		{
+			"file" : "/home/nhed/Documents/PlatformIO/Projects/e_moped_com_unit/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule"
+		},
+		{
+			"file" : "/home/nhed/Documents/PlatformIO/Projects/e_moped_com_unit/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"bootloader"
+		],
+		"name" : "bootloader"
+	}
+}

@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "uart_struct.h": "c",
+        "common.h": "c",
+        "can_general.h": "c",
+        "general.h": "c",
+        "can.h": "c",
+        "freertos.h": "c",
+        "task.h": "c",
+        "stdbool.h": "c",
+        "stdio.h": "c",
+        "semphr.h": "c",
+        "*.ipp": "cpp",
+        "typeinfo": "cpp"
+    }
+}
