@@ -6,8 +6,9 @@ The story of how a vintage moped got a new electrified life!
 
 <p align="center">
 <br>
-In the beginning of 2020 i got the idea to convert an old 70's two-stroke moped to electric power. 
-Now, two years later, and not too many iterations of my ideas it's finished! More or less finished anyway! :) 
+In 2019 i got the idea to convert an old 70's two-stroke moped to electric power without loosing the
+look of an old two stroke moped. I bought and old worn Crescent moped early 2020 and got to work! 
+Over a year later, and not too many iterations of my ideas it's finished! More or less anyway! :) 
 </p>
 <br>
 <br>
@@ -81,7 +82,7 @@ i got at least 10km of range with a 5Ah battery, so i should get a range of at l
 Youtube clip:
 </p>
 <div align="center">
-  <a href="https://www.youtube.com/watch?v=hFOQdgR-VeI"><img src="https://img.youtube.com/vi/hFOQdgR-VeI/0.jpg" alt="Vintage Crescent moped converted to electric"></a>
+  <a href="https://www.youtube.com/watch?v=hFOQdgR-VeI"><img src="pictures/youtube_thumb.jpg" alt="Vintage Crescent moped converted to electric"></a>
 </div>
 
 <br>
@@ -89,7 +90,7 @@ Youtube clip:
 <br>
 Future plans and improvements:<br>
 -[ ]Custom PCB with a esp32 as microcontroller, this is mainly to try to get BMS information and display it.<br>
--[ ] ]More outputs for lights, and also a on/off signal relay for the motor controller. <br>
+-[ ]More outputs for lights, and also a on/off signal relay for the motor controller. <br>
 -[ ]A loud buzzer as horn mounted on the pcb.<br>
 -[ ]Motor temperature sensor, the excisting one is not compatible with motor controller. I probably will mount external one.<br>
 
