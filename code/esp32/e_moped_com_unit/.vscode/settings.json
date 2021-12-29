@@ -11,6 +11,8 @@
         "stdio.h": "c",
         "semphr.h": "c",
         "*.ipp": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "io.h": "c",
+        "cctype": "c"
     }
 }
