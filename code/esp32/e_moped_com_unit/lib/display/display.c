@@ -1,22 +1,26 @@
+#include <string.h>
+#include <ctype.h>
+#include "buzzer_driver.h"
 #include "driver/uart.h"
 #include "soc/uart_struct.h"
 #include "common.h"
-#include <string.h>
+#include "display.h"
 #include "io.h"
+#include "login_code.h"
 
-#define UART_2_TXD (17)
-#define UART_2_RXD (16)
 #define UART_2_RTS (UART_PIN_NO_CHANGE)
 #define UART_2_CTS (UART_PIN_NO_CHANGE)
-
 #define UART_2_PORT_NUM (2)
 #define UART_2_BAUD_RATE (9600)
-
 #define BUF_SIZE (1024)
 #define DISPLAY_TASK_STACK_SIZE (1024)
 
 static status_t display_status = STATUS_UNINITIALIZED;
-page_t g_curr_page = PAGE_MAIN;
+static page_t curr_page = PAGE_LOGIN;
+static bool is_unlocked = false;
+static uint8_t code[4] = {0, 0, 0, 0};
+static uint16_t temp_code = 0;
+static bool data_available = false;
 
 //Pointer to the vesc struct used to store data from vesc motor controller.
 static Vesc_data_t *vesc = NULL;
@@ -24,17 +28,19 @@ static Vesc_data_t *vesc = NULL;
 //function prototypes:
 void display_task(void *pvParameters);
 void set_disp(const char *var, int msg);
-void set_disp_message(const char *string, int val);
+void set_disp_message(const char *string);
+void set_disp_txt(const char *string, int val);
 void eval_in_data(char *in_data);
 
 bool display_init(Vesc_data_t *vesc_ptr)
 {
     bool return_val = false;
+    int intr_alloc_flags = 0;
     vesc = vesc_ptr;
 
     /* Configure parameters of an UART driver,
      * communication pins and install the driver */
-    uart_config_t uart_config = {
+    static uart_config_t uart_config = {
         .baud_rate = UART_2_BAUD_RATE,
         .data_bits = UART_DATA_8_BITS,
         .parity = UART_PARITY_DISABLE,
@@ -42,12 +48,17 @@ bool display_init(Vesc_data_t *vesc_ptr)
         .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
         .source_clk = UART_SCLK_APB,
     };
-    int intr_alloc_flags = 0;
 
-    ESP_ERROR_CHECK(uart_driver_delete(UART_2_PORT_NUM));
-    ESP_ERROR_CHECK(uart_driver_install(UART_2_PORT_NUM, BUF_SIZE * 2, 0, 0, NULL, intr_alloc_flags));
-    ESP_ERROR_CHECK(uart_param_config(UART_2_PORT_NUM, &uart_config));
-    ESP_ERROR_CHECK(uart_set_pin(UART_2_PORT_NUM, UART_2_TXD, UART_2_RXD, UART_2_RTS, UART_2_CTS));
+    /*uart_driver_delete(UART_2_PORT_NUM) == ESP_OK &&*/ // TODO: REMOVE THIS LINE Removed as a test, seems like it's ok when using esp32_dev as board
+    if (uart_driver_install(UART_2_PORT_NUM, BUF_SIZE * 2, 0, 0, NULL, intr_alloc_flags) == ESP_OK &&
+        uart_param_config(UART_2_PORT_NUM, &uart_config) == ESP_OK &&
+        uart_set_pin(UART_2_PORT_NUM, UART_2_TXD_PIN, UART_2_RXD_PIN, UART_2_RTS, UART_2_CTS) == ESP_OK)
+    {
+        return_val = true;
+    }
+
+    set_disp_message("page login");
+
     return return_val;
 }
 
@@ -72,6 +83,7 @@ void display_task(void *pvParameters)
         if (len > 1)
         {
             data[len] = '\0';
+            data_available = true;
             eval_in_data(data);
         }
 
@@ -95,7 +107,7 @@ void display_task(void *pvParameters)
         {
             vTaskDelay(5 / portTICK_PERIOD_MS);
         }
-        switch (g_curr_page)
+        switch (curr_page)
         {
         case PAGE_MAIN:
             set_disp(MAIN_BATT_VOLTS_DISP, vesc_cpy.voltage);
@@ -121,11 +133,22 @@ void display_task(void *pvParameters)
             break;
         case PAGE_BAT:
             break;
-
+        case PAGE_LOGIN:
+            break;
         default:
             break;
         }
     }
+}
+
+void display_set_page(page_t page)
+{
+    curr_page = page;
+}
+
+page_t display_get_page(void)
+{
+    return curr_page;
 }
 
 status_t display_get_status(void)
@@ -145,21 +168,55 @@ void set_disp(const char *var, int msg)
     uart_write_bytes(UART_2_PORT_NUM, clear, 3);
 }
 
-void set_disp_message(const char *string, int val)
+void set_disp_message(const char *string)
 {
     const char clear[3] = {0xFF, 0xFF, 0xFF};
     char temp[15] = {0};
 
     uart_write_bytes(UART_2_PORT_NUM, clear, 3);
-    sprintf(temp, "%s%d", string, val);
+    sprintf(temp, "%s", string);
     int size = strlen(temp);
     uart_write_bytes(UART_2_PORT_NUM, temp, size);
     uart_write_bytes(UART_2_PORT_NUM, clear, 3);
 }
 
+void set_disp_txt(const char *string, int val)
+{
+    const char clear[3] = {0xFF, 0xFF, 0xFF};
+    char temp[15] = {0};
+
+    uart_write_bytes(UART_2_PORT_NUM, clear, 3);
+    sprintf(temp, "%s\"%d\"", string, val);
+    int size = strlen(temp);
+    uart_write_bytes(UART_2_PORT_NUM, temp, size);
+    uart_write_bytes(UART_2_PORT_NUM, clear, 3);
+}
+
+bool code_add_digit(char digit)
+{
+    static uint8_t digit_placement = 0;
+    if (temp_code == 0)
+    {
+        digit_placement = 0;
+    }
+
+    if (digit_placement > 3)
+    {
+        digit_placement = 0;
+        temp_code = 0;
+    }
+
+    code[digit_placement] = digit;
+    temp_code = ((temp_code * 10) + (code[digit_placement] - '0'));
+    printf("tempCode:%d\n", temp_code);
+    set_disp_txt("t0.txt=", temp_code);
+    digit_placement++;
+    return (temp_code == LOGIN_CODE) ? true : false;
+}
+
 void eval_in_data(char *in_data)
 {
-
+    printf("in_data:%s\n", in_data);
     if (strcmp("b=light", in_data) == 0)
     {
         static uint8_t light_state = 0;
@@ -169,14 +226,64 @@ void eval_in_data(char *in_data)
     }
     else if (strcmp("p=main", in_data) == 0)
     {
-        g_curr_page = PAGE_MAIN;
+        display_set_page(PAGE_MAIN);
     }
     else if (strcmp("p=list", in_data) == 0)
     {
-        g_curr_page = PAGE_LIST;
+        display_set_page(PAGE_LIST);
+        buzzer_play_sound(0);
     }
     else if (strcmp("p=bat", in_data) == 0)
     {
-        g_curr_page = PAGE_BAT;
+        display_set_page(PAGE_BAT);
+        // buzzer_play_sound(1);
     }
+
+    else if (strcmp("b=lock", in_data) == 0)
+    {
+        if (is_unlocked)
+        {
+            is_unlocked = false;
+            display_set_page(PAGE_LOGIN);
+            set_disp_message("page login");
+        }
+    }
+    else if (in_data[0] == 'b' && isdigit(in_data[2]))
+    {
+        code_add_digit(in_data[2]);
+    }
+    else if (strcmp("b=del", in_data) == 0)
+    {
+        temp_code = 0;
+        set_disp_message("t0.txt=\" \"");
+    }
+
+    else if (strcmp("b=unlock", in_data) == 0)
+    {
+        if (temp_code == LOGIN_CODE)
+        {
+            is_unlocked = true;
+            set_disp_message("page main");
+        }
+        else
+        {
+            temp_code = 0;
+            set_disp_message("t0.txt=\" \"");
+        }
+    }
+}
+
+bool display_is_unlocked(void)
+{
+    return is_unlocked;
+}
+
+bool display_data_available()
+{
+    return data_available;
+}
+
+void display_get_data(char *buffer)
+{
+    //Todo: add code for getting the incoming data here.
 }
