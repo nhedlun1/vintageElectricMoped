@@ -79,7 +79,6 @@ void display_task(void *pvParameters)
         if (len > 1)
         {
             data[len] = '\0';
-            printf("trying to send from display:%s\n", data);
             xQueueSend(display_msg_queue, (void *)&data, 10);
         }
 
