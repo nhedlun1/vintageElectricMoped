@@ -10,20 +10,19 @@
 #define REAR_LIGTH_PIN 33
 #define BUZZER_PIN 15
 #define ONBOARD_LED_PIN 2
+#define UART_2_TXD_PIN 17
+#define UART_2_RXD_PIN 16
 
 #define OFF 0
 #define ON 1
-#define NORMAL 0
-#define BRAKE 1
+#define NORMAL 2
+#define BRAKE 3
 
-#define VESC_ID = 0x5F
-
-//5F == 95 as vesc id
-#define MSG_ID_1 0x95F  //= 0x934 = 100100110100
-#define MSG_ID_2 0xE5F  //= 0xE34 = 111000110100
-#define MSG_ID_3 0xF5F  //= 0xF34 = 111100110100
-#define MSG_ID_4 0x105F //= 0x1034= 0001000000110100
-#define MSG_ID_5 0x1B5F //= 0x1B34= 0001101100110100
+#define MSG_ID_1 0x9
+#define MSG_ID_2 0xE
+#define MSG_ID_3 0xF
+#define MSG_ID_4 0x10
+#define MSG_ID_5 0x1B
 
 /**
  *Nextion display variable names
@@ -74,6 +73,7 @@ typedef enum
 
 typedef enum
 {
+    PAGE_LOGIN,
     PAGE_MAIN,
     PAGE_LIST,
     PAGE_BAT
