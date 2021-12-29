@@ -13,4 +13,8 @@ bool io_set_vesc_state(uint8_t state);
 
 uint8_t io_get_vesc_state(void);
 
+uint8_t io_get_front_light_state(void);
+
+uint8_t io_get_rear_light_state(void);
+
 #endif /*GPIO_H*/

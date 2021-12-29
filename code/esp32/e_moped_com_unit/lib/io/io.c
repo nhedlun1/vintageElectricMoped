@@ -12,6 +12,8 @@
 #define LEDC_FREQUENCY (5000)           // Frequency in Hertz. Set frequency at 5 kHz
 
 static uint8_t vesc_state = OFF;
+static uint8_t front_light_state = OFF;
+static uint8_t rear_light_state = OFF;
 
 bool io_init()
 {
@@ -50,6 +52,7 @@ bool io_init()
 
 bool io_set_front_light(uint8_t state)
 {
+    front_light_state = state;
     bool return_value = false;
     switch (state)
     {
@@ -74,6 +77,7 @@ bool io_set_front_light(uint8_t state)
 
 bool io_set_rear_light(uint8_t state)
 {
+    rear_light_state = state;
     switch (state)
     {
     case BRAKE:
@@ -87,13 +91,11 @@ bool io_set_rear_light(uint8_t state)
         break;
 
     default:
-    case NORMAL:
+    case ON:
         ledc_set_duty(LEDC_MODE, LEDC_CHANNEL, 600);
         ledc_update_duty(LEDC_MODE, LEDC_CHANNEL);
         break;
     }
-    // ledc_set_freq(LEDC_MODE, LEDC_TIMER, LEDC_FREQUENCY);
-
     return false;
 }
 
@@ -125,5 +127,16 @@ bool io_set_vesc_state(uint8_t state)
 
 uint8_t io_get_vesc_state(void)
 {
+    vesc_state = gpio_get_level(MOT_ENABLE_PIN);
     return vesc_state;
+}
+
+uint8_t io_get_front_light_state(void)
+{
+    return front_light_state;
+}
+
+uint8_t io_get_rear_light_state(void)
+{
+    return rear_light_state;
 }
