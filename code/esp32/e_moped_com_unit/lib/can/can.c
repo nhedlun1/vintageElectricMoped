@@ -21,7 +21,6 @@ void read_twai_task(void *pvParameters);
 bool can_init(Vesc_data_t *vesc_ptr)
 {
     gpio_set_direction(ONBOARD_LED_PIN, GPIO_MODE_OUTPUT);
-
     bool return_val = false;
     vesc = vesc_ptr;
     if (twai_driver_install(&g_config, &t_config, &f_config) == ESP_OK)
@@ -53,8 +52,8 @@ void read_twai_task(void *pvParameters)
     twai_status_info_t status;
     twai_get_status_info(&status);
     static uint8_t led_state = 0;
-    // static uint8_t led_state_counter = 0;
     static uint8_t error_counter = 0;
+    uint32_t msg_id = 0x0;
 
     can_status = STATUS_OK;
 
@@ -62,6 +61,8 @@ void read_twai_task(void *pvParameters)
     {
         if (twai_receive(&message, pdMS_TO_TICKS(25)) == ESP_OK)
         {
+            msg_id = (message.identifier >> 8); //remove vesc id and just get the messageId.
+
             error_counter = 0;
             can_status = STATUS_OK;
 
@@ -71,7 +72,7 @@ void read_twai_task(void *pvParameters)
             //try to take mutex and write data to the vesc struct
             if (xSemaphoreTake(vesc->mutex, (TickType_t)10) == pdTRUE)
             {
-                switch (message.identifier)
+                switch (msg_id)
                 {
                 case MSG_ID_1:
                     vesc->erpm = (message.data[3] | (message.data[2] << 8) | (message.data[1] << 16) | (message.data[0] << 24)); // *((int32_t *)message.data);
@@ -127,6 +128,8 @@ void read_twai_task(void *pvParameters)
         else //when task could not read can, delay 10ms to yeild to other thread.
         {
             vTaskDelay(10 / portTICK_PERIOD_MS);
+            led_state = 0;
+            gpio_set_level(ONBOARD_LED_PIN, led_state);
         }
     }
 }
