@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-bool display_init(Vesc_data_t *data);
+bool display_init(Vesc_data_t *data, QueueHandle_t *display_msg_queue);
 
 status_t display_start_task(void);
 
@@ -13,10 +13,10 @@ void display_set_page(page_t page);
 
 page_t display_get_page(void);
 
-bool display_is_unlocked(void);
+void set_disp(const char *var, int msg);
 
-bool display_data_available(void);
+void set_disp_message(const char *string);
 
-void display_get_data(char *buffer);
+void set_disp_txt(const char *string, int val);
 
 #endif

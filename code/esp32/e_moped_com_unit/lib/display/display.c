@@ -6,7 +6,6 @@
 #include "common.h"
 #include "display.h"
 #include "io.h"
-#include "login_code.h"
 
 #define UART_2_RTS (UART_PIN_NO_CHANGE)
 #define UART_2_CTS (UART_PIN_NO_CHANGE)
@@ -17,26 +16,23 @@
 
 static status_t display_status = STATUS_UNINITIALIZED;
 static page_t curr_page = PAGE_LOGIN;
-static bool is_unlocked = false;
-static uint8_t code[4] = {0, 0, 0, 0};
-static uint16_t temp_code = 0;
-static bool data_available = false;
 
 //Pointer to the vesc struct used to store data from vesc motor controller.
 static Vesc_data_t *vesc = NULL;
+static QueueHandle_t display_msg_queue;
 
 //function prototypes:
 void display_task(void *pvParameters);
 void set_disp(const char *var, int msg);
 void set_disp_message(const char *string);
 void set_disp_txt(const char *string, int val);
-void eval_in_data(char *in_data);
 
-bool display_init(Vesc_data_t *vesc_ptr)
+bool display_init(Vesc_data_t *vesc_ptr, QueueHandle_t *msg_queue)
 {
     bool return_val = false;
     int intr_alloc_flags = 0;
     vesc = vesc_ptr;
+    display_msg_queue = *msg_queue;
 
     /* Configure parameters of an UART driver,
      * communication pins and install the driver */
@@ -64,7 +60,7 @@ bool display_init(Vesc_data_t *vesc_ptr)
 
 status_t display_start_task()
 {
-    xTaskCreate(display_task, "display_task", DISPLAY_TASK_STACK_SIZE * 4, NULL, 10, NULL);
+    xTaskCreatePinnedToCore(display_task, "display_task", DISPLAY_TASK_STACK_SIZE * 4, NULL, 10, NULL, 1);
     vTaskDelay(100 / portTICK_PERIOD_MS); //delay to give task a chance to start and change status.
     return display_status;
 }
@@ -83,8 +79,8 @@ void display_task(void *pvParameters)
         if (len > 1)
         {
             data[len] = '\0';
-            data_available = true;
-            eval_in_data(data);
+            printf("trying to send from display:%s\n", data);
+            xQueueSend(display_msg_queue, (void *)&data, 10);
         }
 
         //try to take mutex and write data to the vesc struct
@@ -105,7 +101,7 @@ void display_task(void *pvParameters)
         }
         else
         {
-            vTaskDelay(5 / portTICK_PERIOD_MS);
+            vTaskDelay(10 / portTICK_PERIOD_MS);
         }
         switch (curr_page)
         {
@@ -138,6 +134,7 @@ void display_task(void *pvParameters)
         default:
             break;
         }
+        vTaskDelay(15 / portTICK_PERIOD_MS);
     }
 }
 
@@ -190,100 +187,4 @@ void set_disp_txt(const char *string, int val)
     int size = strlen(temp);
     uart_write_bytes(UART_2_PORT_NUM, temp, size);
     uart_write_bytes(UART_2_PORT_NUM, clear, 3);
-}
-
-bool code_add_digit(char digit)
-{
-    static uint8_t digit_placement = 0;
-    if (temp_code == 0)
-    {
-        digit_placement = 0;
-    }
-
-    if (digit_placement > 3)
-    {
-        digit_placement = 0;
-        temp_code = 0;
-    }
-
-    code[digit_placement] = digit;
-    temp_code = ((temp_code * 10) + (code[digit_placement] - '0'));
-    printf("tempCode:%d\n", temp_code);
-    set_disp_txt("t0.txt=", temp_code);
-    digit_placement++;
-    return (temp_code == LOGIN_CODE) ? true : false;
-}
-
-void eval_in_data(char *in_data)
-{
-    printf("in_data:%s\n", in_data);
-    if (strcmp("b=light", in_data) == 0)
-    {
-        static uint8_t light_state = 0;
-        light_state = (light_state == 0) ? 1 : 0;
-        set_disp(MAIN_LIGHT_BTN_DISP, light_state);
-        io_set_front_light(light_state);
-    }
-    else if (strcmp("p=main", in_data) == 0)
-    {
-        display_set_page(PAGE_MAIN);
-    }
-    else if (strcmp("p=list", in_data) == 0)
-    {
-        display_set_page(PAGE_LIST);
-        buzzer_play_sound(0);
-    }
-    else if (strcmp("p=bat", in_data) == 0)
-    {
-        display_set_page(PAGE_BAT);
-        // buzzer_play_sound(1);
-    }
-
-    else if (strcmp("b=lock", in_data) == 0)
-    {
-        if (is_unlocked)
-        {
-            is_unlocked = false;
-            display_set_page(PAGE_LOGIN);
-            set_disp_message("page login");
-        }
-    }
-    else if (in_data[0] == 'b' && isdigit(in_data[2]))
-    {
-        code_add_digit(in_data[2]);
-    }
-    else if (strcmp("b=del", in_data) == 0)
-    {
-        temp_code = 0;
-        set_disp_message("t0.txt=\" \"");
-    }
-
-    else if (strcmp("b=unlock", in_data) == 0)
-    {
-        if (temp_code == LOGIN_CODE)
-        {
-            is_unlocked = true;
-            set_disp_message("page main");
-        }
-        else
-        {
-            temp_code = 0;
-            set_disp_message("t0.txt=\" \"");
-        }
-    }
-}
-
-bool display_is_unlocked(void)
-{
-    return is_unlocked;
-}
-
-bool display_data_available()
-{
-    return data_available;
-}
-
-void display_get_data(char *buffer)
-{
-    //Todo: add code for getting the incoming data here.
 }
