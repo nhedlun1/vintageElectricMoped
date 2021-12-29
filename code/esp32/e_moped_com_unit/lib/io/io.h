@@ -9,6 +9,8 @@ bool io_set_front_light(uint8_t state);
 
 bool io_set_rear_light(uint8_t state);
 
-bool io_enable_vesc(uint8_t state);
+bool io_set_vesc_state(uint8_t state);
+
+uint8_t io_get_vesc_state(void);
 
 #endif /*GPIO_H*/
