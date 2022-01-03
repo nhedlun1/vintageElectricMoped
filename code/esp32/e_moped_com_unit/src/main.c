@@ -31,9 +31,17 @@ void init()
 {
     vTaskDelay(1500 / portTICK_PERIOD_MS);
     vesc.mutex = xSemaphoreCreateMutex();
+    
     data = (char *)malloc(msg_len);
-    display_msg_queue = xQueueCreate(msg_queue_len, sizeof(data));
-
+    if (data != NULL)
+    {
+        display_msg_queue = xQueueCreate(msg_queue_len, sizeof(data));
+    }
+    else
+    {
+        printf("Could not allocate memory for serial data in main\n");
+    }
+    
     if (!io_init())
     {
         printf("Could not init io");

@@ -68,8 +68,14 @@ status_t display_start_task()
 void display_task(void *pvParameters)
 {
     display_status = STATUS_OK;
-    char *data = (char *)malloc(BUF_SIZE);
     static Vesc_data_t vesc_cpy;
+
+    char *data = (char *)malloc(BUF_SIZE);
+    if (data == NULL)
+    {
+        printf("Could not allocate memory for data in display task\n");
+        display_status = STATUS_ERROR;
+    }
 
     while (1)
     {
