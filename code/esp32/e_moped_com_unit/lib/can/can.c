@@ -3,6 +3,7 @@
 #include "freertos/semphr.h"
 #include "driver/twai.h"
 #include "can.h"
+#include "io.h"
 
 #define READ_TWAI_TASK_STACK_SIZE (1024)
 
@@ -13,14 +14,11 @@ twai_filter_config_t f_config = TWAI_FILTER_CONFIG_ACCEPT_ALL();
 
 //Pointer to the vesc struct used to store data from vesc motor controller.
 static Vesc_data_t *vesc = NULL;
-status_t can_status = STATUS_UNINITIALIZED;
 
-//Function declaration
-void read_twai_task(void *pvParameters);
+status_t can_status = STATUS_UNINITIALIZED;
 
 bool can_init(Vesc_data_t *vesc_ptr)
 {
-    gpio_set_direction(ONBOARD_LED_PIN, GPIO_MODE_OUTPUT);
     bool return_val = false;
     vesc = vesc_ptr;
     if (twai_driver_install(&g_config, &t_config, &f_config) == ESP_OK)
@@ -32,18 +30,6 @@ bool can_init(Vesc_data_t *vesc_ptr)
         return_val = false;
     }
     return return_val;
-}
-
-status_t can_start_task(void)
-{
-    xTaskCreate(read_twai_task, "read_twai_task", READ_TWAI_TASK_STACK_SIZE * 4, NULL, 10, NULL);
-    vTaskDelay(100 / portTICK_PERIOD_MS); //delay to give task a chance to start and change status.
-    return can_status;
-}
-
-status_t can_get_status(void)
-{
-    return can_status;
 }
 
 void read_twai_task(void *pvParameters)
@@ -67,7 +53,7 @@ void read_twai_task(void *pvParameters)
             can_status = STATUS_OK;
 
             led_state = (led_state == 0) ? 1 : 0;
-            gpio_set_level(ONBOARD_LED_PIN, led_state);
+            io_set_led_state(led_state);
 
             //try to take mutex and write data to the vesc struct
             if (xSemaphoreTake(vesc->mutex, (TickType_t)10) == pdTRUE)
@@ -119,7 +105,8 @@ void read_twai_task(void *pvParameters)
                 if (error_counter > 10)
                 {
                     led_state = 0;
-                    gpio_set_level(ONBOARD_LED_PIN, led_state);
+                    io_set_led_state(led_state);
+
                     can_status = STATUS_ERROR;
                 }
                 vTaskDelay(10 / portTICK_PERIOD_MS);
@@ -129,7 +116,19 @@ void read_twai_task(void *pvParameters)
         {
             vTaskDelay(10 / portTICK_PERIOD_MS);
             led_state = 0;
-            gpio_set_level(ONBOARD_LED_PIN, led_state);
+            io_set_led_state(led_state);
         }
     }
+}
+
+status_t can_start_task(void)
+{
+    xTaskCreate(read_twai_task, "read_twai_task", READ_TWAI_TASK_STACK_SIZE * 4, NULL, 10, NULL);
+    vTaskDelay(100 / portTICK_PERIOD_MS); //delay to give task a chance to start and change status.
+    return can_status;
+}
+
+status_t can_get_status(void)
+{
+    return can_status;
 }
