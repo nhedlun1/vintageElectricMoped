@@ -15,8 +15,7 @@
 
 #define OFF 0
 #define ON 1
-#define NORMAL 2
-#define BRAKE 3
+#define BRAKE 2
 
 #define MSG_ID_1 0x9
 #define MSG_ID_2 0xE
