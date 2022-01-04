@@ -8,7 +8,7 @@
 #define REAR_LIGHT_TIMER_MODE LEDC_LOW_SPEED_MODE
 #define REAR_LIGHT_TIMER_CHANNEL LEDC_CHANNEL_0
 #define REAR_LIGHT_TIMER_DUTY_RES LEDC_TIMER_10_BIT // Set duty resolution to 10 bits
-#define REAR_LIGHT_TIMER_DUTY (1023)                // Set duty to 100%. ((2 ** 10) - 1) * 50% = 512
+#define REAR_LIGHT_TIMER_DUTY (1024)                // Set duty to 100%. ((2 ** 10) - 1) * 50% = 512
 #define REAR_LIGHT_TIMER_FREQUENCY (5000)           // Frequency in Hertz. Set frequency at 5 kHz
 
 static uint8_t vesc_state = OFF;
@@ -92,7 +92,7 @@ bool io_set_rear_light(uint8_t state)
         break;
 
     case OFF:
-        ledc_set_duty(REAR_LIGHT_TIMER_MODE, REAR_LIGHT_TIMER_CHANNEL, 1023);
+        ledc_set_duty(REAR_LIGHT_TIMER_MODE, REAR_LIGHT_TIMER_CHANNEL, 1024);
         ledc_update_duty(REAR_LIGHT_TIMER_MODE, REAR_LIGHT_TIMER_CHANNEL);
         break;
 
