@@ -31,7 +31,7 @@ void init()
 {
     vTaskDelay(1500 / portTICK_PERIOD_MS);
     vesc.mutex = xSemaphoreCreateMutex();
-    
+
     data = (char *)malloc(msg_len);
     if (data != NULL)
     {
@@ -41,7 +41,7 @@ void init()
     {
         printf("Could not allocate memory for serial data in main\n");
     }
-    
+
     if (!io_init())
     {
         printf("Could not init io");
@@ -91,7 +91,6 @@ void app_main(void)
 
     while (1)
     {
-
         //if a string has been put in the que by the display-task, read it and do something about it.
         if (xQueueReceive(display_msg_queue, (void *)&data, 0) == pdTRUE)
         {
@@ -162,13 +161,13 @@ void eval_in_data(char *in_data)
     else if (strcmp("p=bat", in_data) == 0)
     {
         display_set_page(PAGE_BAT);
-        // buzzer_play_sound(1);
     }
 
     else if (strcmp("b=lock", in_data) == 0)
     {
         if (is_unlocked)
         {
+            buzzer_play_sound(TUNE_LOCKING);
             is_unlocked = false;
             display_set_page(PAGE_LOGIN);
             set_disp_message("page login");
@@ -181,6 +180,7 @@ void eval_in_data(char *in_data)
     }
     else if (strcmp("b=del", in_data) == 0)
     {
+        buzzer_play_sound(TUNE_HORN);
         temp_code = 0;
         set_disp_message("t0.txt=\" \"");
     }
@@ -189,11 +189,14 @@ void eval_in_data(char *in_data)
     {
         if (temp_code == LOGIN_CODE)
         {
+            temp_code = 0;
+            buzzer_play_sound(TUNE_ACCESS_GRANTED);
             is_unlocked = true;
             set_disp_message("page main");
         }
         else
         {
+            buzzer_play_sound(TUNE_ACCESS_DENIED);
             temp_code = 0;
             set_disp_message("t0.txt=\" \"");
         }
