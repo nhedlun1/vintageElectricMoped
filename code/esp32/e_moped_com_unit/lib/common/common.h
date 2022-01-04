@@ -5,6 +5,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 
+//Pins:
 #define MOT_ENABLE_PIN 12
 #define FRONT_LIGTH_PIN 32
 #define REAR_LIGTH_PIN 33
@@ -13,19 +14,28 @@
 #define UART_2_TXD_PIN 17
 #define UART_2_RXD_PIN 16
 
+//Lighting defines:
 #define OFF 0
 #define ON 1
 #define BRAKE 2
 
+//CAN message id's:
 #define MSG_ID_1 0x9
 #define MSG_ID_2 0xE
 #define MSG_ID_3 0xF
 #define MSG_ID_4 0x10
 #define MSG_ID_5 0x1B
 
+//Buzzer sounds
+#define TUNE_ACCESS_DENIED 0
+#define TUNE_ACCESS_GRANTED 1
+#define TUNE_WARNING 2
+#define TUNE_HORN 3
+#define TUNE_LOCKING 4
+
 /**
- *Nextion display variable names
- *<PAGE>_<VARIABLE>_<DISP>
+ *Nextion display variable names:
+ *<PAGE>_<VARIABLE>_DISP "value"
 */
 #define MAIN_SPEED_DISP "n0"
 #define MAIN_RPM_DISP "n1"
@@ -52,9 +62,10 @@
 #define LIST_BATT_VOLT_DISP "x8"
 #define LIST_TACH_VAL_DISP "n3"
 
-#define MAIN 0
-#define LIST 1
-#define BATT 2
+//Maybe remove?
+// #define MAIN 0
+// #define LIST 1
+// #define BATT 2
 
 #define WHEEL_RADIUS 0.25f  //Diameter of rear wheel in m
 #define CIRCUMFERENCE 1.57f //PI * 2 * WHEEL_RADIUS
