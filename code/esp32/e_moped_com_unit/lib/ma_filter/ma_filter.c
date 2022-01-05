@@ -37,10 +37,32 @@ ma_filter_float_t *ma_init_float(uint8_t num_readings)
 int ma_get_avg_int(ma_filter_int_t *filter)
 {
     float return_value = 0;
-    for (int i = 0; i < filter->num_readings; i++)
+    if (filter->mean_average && filter->full)
     {
-        return_value += filter->values[i];
-        printf("value[%d]=%d\n", i, filter->values[i]);
+        int *temp_arr = malloc(sizeof(int) * filter->num_readings);
+        memcpy(temp_arr, filter->values, sizeof(int) * filter->num_readings);
+
+        for (int i = 0; i < filter->num_readings; i++)
+        {
+            for (int j = i + 1; j < filter->num_readings; j++)
+            {
+                if (temp_arr[i] > temp_arr[j])
+                {
+                    int temp = temp_arr[i];
+                    temp_arr[i] = temp_arr[j];
+                    temp_arr[j] = temp;
+                }
+            }
+        }
+        free(temp_arr);
+        //TODO: Add implementation for taking just "the right middle chunk" of values from the newly sorted array.
+    }
+    else
+    {
+        for (int i = 0; i < filter->num_readings; i++)
+        {
+            return_value += filter->values[i];
+        }
     }
     int devider = (filter->full) ? filter->num_readings : filter->val_counter;
     return (int)((return_value / devider) + 0.5f);
