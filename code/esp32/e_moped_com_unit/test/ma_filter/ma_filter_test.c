@@ -23,15 +23,21 @@ void test_ma_add_value()
     int value_i = 2;
 
     ma_add_value_int(test_filter_i, value_i);
-    ma_add_value_int(test_filter_i, value_i + 3);
-
     ma_add_value_float(test_filter_f, value_f);
-    ma_add_value_float(test_filter_f, value_f + 3);
-    printf("int val=%d\n", ma_get_avg_int(test_filter_i));
-    printf("float val=%f\n", ma_get_avg_float(test_filter_f));
+    TEST_ASSERT_EQUAL(1, test_filter_i->val_counter);
+    TEST_ASSERT_EQUAL(1, test_filter_f->val_counter);
 
-    TEST_ASSERT_EQUAL(2, test_filter_i->val_counter);
-    TEST_ASSERT_EQUAL(2, test_filter_f->val_counter);
+    ma_add_value_int(test_filter_i, 2);
+    ma_add_value_float(test_filter_f, 1.5f);
+    ma_add_value_int(test_filter_i, 1);
+    ma_add_value_float(test_filter_f, 4.5f);
+    ma_add_value_int(test_filter_i, 3);
+    ma_add_value_float(test_filter_f, 5.25f);
+    ma_add_value_int(test_filter_i, 2);
+    ma_add_value_float(test_filter_f, 1.5f);
+
+    TEST_ASSERT_EQUAL(2, ma_get_avg_int(test_filter_i));
+    TEST_ASSERT_EQUAL(3.05f, ma_get_avg_float(test_filter_f));
 }
 
 int app_main(void)
