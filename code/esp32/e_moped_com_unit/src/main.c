@@ -144,8 +144,8 @@ void eval_in_data(char *in_data)
     if (strcmp("b=light", in_data) == 0)
     {
         uint8_t light_state = io_get_front_light_state();
-        light_state = (light_state == OFF) ? 1 : 0;
         set_disp(MAIN_LIGHT_BTN_DISP, light_state);
+        light_state = (light_state == OFF) ? 1 : 0;
         io_set_front_light(light_state);
         io_set_rear_light(light_state);
     }
@@ -156,13 +156,26 @@ void eval_in_data(char *in_data)
     else if (strcmp("p=list", in_data) == 0)
     {
         display_set_page(PAGE_LIST);
-        buzzer_play_sound(0);
     }
     else if (strcmp("p=bat", in_data) == 0)
     {
         display_set_page(PAGE_BAT);
     }
-
+    else if (strcmp("b=horn", in_data) == 0)
+    {
+        buzzer_play_sound(TUNE_HORN);
+    }
+    else if (strcmp("b=dim", in_data) == 0)
+    {
+        if (display_get_dim() == DIM_DAY)
+        {
+            display_dim(DIM_NIGHT);
+        }
+        else
+        {
+            display_dim(DIM_DAY);
+        }
+    }
     else if (strcmp("b=lock", in_data) == 0)
     {
         if (is_unlocked)
@@ -180,11 +193,9 @@ void eval_in_data(char *in_data)
     }
     else if (strcmp("b=del", in_data) == 0)
     {
-        buzzer_play_sound(TUNE_HORN);
         temp_code = 0;
         set_disp_message("t0.txt=\" \"");
     }
-
     else if (strcmp("b=unlock", in_data) == 0)
     {
         if (temp_code == LOGIN_CODE)
