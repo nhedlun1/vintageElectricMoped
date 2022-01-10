@@ -19,4 +19,8 @@ void set_disp_message(const char *string);
 
 void set_disp_txt(const char *string, int val);
 
+void display_dim(uint8_t value);
+
+uint8_t display_get_dim(void);
+
 #endif
