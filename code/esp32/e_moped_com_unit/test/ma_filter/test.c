@@ -16,17 +16,18 @@ void test_add_value_int()
 {
     ma_filter_int_t *test_filter_i = ma_init_int(false);
 
-    int value_i = 2;
-
-    ma_add_value_int(test_filter_i, value_i);
+    ma_add_value_int(test_filter_i, 25);
     TEST_ASSERT_EQUAL(1, test_filter_i->val_counter);
+    TEST_ASSERT_EQUAL(25, ma_get_avg_int(test_filter_i));
+    ma_add_value_int(test_filter_i, 27);
+    TEST_ASSERT_EQUAL(26, ma_get_avg_int(test_filter_i));
+    ma_add_value_int(test_filter_i, 26);
+    TEST_ASSERT_EQUAL(26, ma_get_avg_int(test_filter_i));
+    ma_add_value_int(test_filter_i, 29);
+    TEST_ASSERT_EQUAL(27, ma_get_avg_int(test_filter_i));
+    ma_add_value_int(test_filter_i, 27);
 
-    ma_add_value_int(test_filter_i, 2);
-    ma_add_value_int(test_filter_i, 1);
-    ma_add_value_int(test_filter_i, 3);
-    ma_add_value_int(test_filter_i, 2);
-
-    TEST_ASSERT_EQUAL(2, ma_get_avg_int(test_filter_i));
+    TEST_ASSERT_EQUAL(27, ma_get_avg_int(test_filter_i));
     ma_free_filter_int(test_filter_i);
 }
 
