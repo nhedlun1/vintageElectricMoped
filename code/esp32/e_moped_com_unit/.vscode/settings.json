@@ -24,6 +24,8 @@
         "functional": "c",
         "tuple": "c",
         "type_traits": "c",
-        "utility": "c"
+        "utility": "c",
+        "ma_filter.h": "c",
+        "unity.h": "c"
     }
 }
