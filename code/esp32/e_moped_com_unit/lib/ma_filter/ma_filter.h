@@ -17,29 +17,29 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#define NUM_READINGS 8
+#define WANTED_READINGS 6
+
 typedef struct
 {
-    uint8_t num_readings;
     uint8_t val_counter;
     bool full;
-    int *ma_value;
     bool mean_average;
     int values[]; //flexible struct member needs no size.
 } ma_filter_int_t;
 
 typedef struct
 {
-    uint8_t num_readings;
     uint8_t val_counter;
     bool full;
-    float *ma_value;
     bool mean_average;
     float values[]; //flexible struct member needs no size.
 } ma_filter_float_t;
 
-ma_filter_int_t *ma_init_int(uint8_t num_readings);
+ma_filter_int_t *ma_init_int(bool has_mean_avg);
 
-ma_filter_float_t *ma_init_float(uint8_t num_readings);
+ma_filter_float_t *ma_init_float(bool has_mean_avg);
 
 int ma_get_avg_int(ma_filter_int_t *filter);
 
