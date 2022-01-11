@@ -62,10 +62,9 @@
 #define LIST_BATT_VOLT_DISP "x8"
 #define LIST_TACH_VAL_DISP "n3"
 
-//Maybe remove?
-// #define MAIN 0
-// #define LIST 1
-// #define BATT 2
+//Display dim values
+#define DIM_DAY 100
+#define DIM_NIGHT 5
 
 #define WHEEL_RADIUS 0.25f  //Diameter of rear wheel in m
 #define CIRCUMFERENCE 1.57f //PI * 2 * WHEEL_RADIUS

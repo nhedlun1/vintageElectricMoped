@@ -16,6 +16,7 @@
 
 static status_t display_status = STATUS_UNINITIALIZED;
 static page_t curr_page = PAGE_LOGIN;
+static uint8_t dim_value = 100;
 
 //Pointer to the vesc struct used to store data from vesc motor controller.
 static Vesc_data_t *vesc = NULL;
@@ -192,4 +193,17 @@ void set_disp_txt(const char *string, int val)
     int size = strlen(temp);
     uart_write_bytes(UART_2_PORT_NUM, temp, size);
     uart_write_bytes(UART_2_PORT_NUM, clear, 3);
+}
+
+void display_dim(uint8_t value)
+{
+    dim_value = value;
+    char message[20] = {0};
+    sprintf(message,"dim=%d", value);
+    set_disp_message(message);
+}
+
+uint8_t display_get_dim(void)
+{
+    return dim_value;
 }

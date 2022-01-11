@@ -11,6 +11,10 @@
 #define REAR_LIGHT_TIMER_DUTY (1024)                // Set duty to 100%. ((2 ** 10) - 1) * 50% = 512
 #define REAR_LIGHT_TIMER_FREQUENCY (5000)           // Frequency in Hertz. Set frequency at 5 kHz
 
+#define REAR_LIGHT_BRAKE_LVL 0
+#define REAR_LIGHT_OFF_LVL 1024
+#define REAR_LIGHT_ON_LVL 750
+
 static uint8_t vesc_state = OFF;
 static uint8_t front_light_state = OFF;
 static uint8_t rear_light_state = OFF;
@@ -87,18 +91,18 @@ bool io_set_rear_light(uint8_t state)
     switch (state)
     {
     case BRAKE:
-        ledc_set_duty(REAR_LIGHT_TIMER_MODE, REAR_LIGHT_TIMER_CHANNEL, 0);
+        ledc_set_duty(REAR_LIGHT_TIMER_MODE, REAR_LIGHT_TIMER_CHANNEL, REAR_LIGHT_BRAKE_LVL);
         ledc_update_duty(REAR_LIGHT_TIMER_MODE, REAR_LIGHT_TIMER_CHANNEL);
         break;
 
     case OFF:
-        ledc_set_duty(REAR_LIGHT_TIMER_MODE, REAR_LIGHT_TIMER_CHANNEL, 1024);
+        ledc_set_duty(REAR_LIGHT_TIMER_MODE, REAR_LIGHT_TIMER_CHANNEL, REAR_LIGHT_OFF_LVL);
         ledc_update_duty(REAR_LIGHT_TIMER_MODE, REAR_LIGHT_TIMER_CHANNEL);
         break;
 
     default:
     case ON:
-        ledc_set_duty(REAR_LIGHT_TIMER_MODE, REAR_LIGHT_TIMER_CHANNEL, 600);
+        ledc_set_duty(REAR_LIGHT_TIMER_MODE, REAR_LIGHT_TIMER_CHANNEL, REAR_LIGHT_ON_LVL);
         ledc_update_duty(REAR_LIGHT_TIMER_MODE, REAR_LIGHT_TIMER_CHANNEL);
         break;
     }

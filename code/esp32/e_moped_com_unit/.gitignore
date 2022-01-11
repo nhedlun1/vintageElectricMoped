@@ -4,3 +4,5 @@
 .vscode/launch.json
 .vscode/ipch
 /lib/common/login_code.h
+/build
+/build_test
