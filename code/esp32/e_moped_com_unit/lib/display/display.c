@@ -1,40 +1,43 @@
+#include <string.h>
+#include <ctype.h>
+#include "buzzer_driver.h"
 #include "driver/uart.h"
 #include "soc/uart_struct.h"
 #include "common.h"
-#include <string.h>
+#include "display.h"
 #include "io.h"
 
-#define UART_2_TXD (17)
-#define UART_2_RXD (16)
 #define UART_2_RTS (UART_PIN_NO_CHANGE)
 #define UART_2_CTS (UART_PIN_NO_CHANGE)
-
 #define UART_2_PORT_NUM (2)
 #define UART_2_BAUD_RATE (9600)
-
 #define BUF_SIZE (1024)
 #define DISPLAY_TASK_STACK_SIZE (1024)
 
 static status_t display_status = STATUS_UNINITIALIZED;
-page_t g_curr_page = PAGE_MAIN;
+static page_t curr_page = PAGE_LOGIN;
+static uint8_t dim_value = 100;
 
 //Pointer to the vesc struct used to store data from vesc motor controller.
 static Vesc_data_t *vesc = NULL;
+static QueueHandle_t display_msg_queue;
 
 //function prototypes:
 void display_task(void *pvParameters);
 void set_disp(const char *var, int msg);
-void set_disp_message(const char *string, int val);
-void eval_in_data(char *in_data);
+void set_disp_message(const char *string);
+void set_disp_txt(const char *string, int val);
 
-bool display_init(Vesc_data_t *vesc_ptr)
+bool display_init(Vesc_data_t *vesc_ptr, QueueHandle_t *msg_queue)
 {
     bool return_val = false;
+    int intr_alloc_flags = 0;
     vesc = vesc_ptr;
+    display_msg_queue = *msg_queue;
 
     /* Configure parameters of an UART driver,
      * communication pins and install the driver */
-    uart_config_t uart_config = {
+    static uart_config_t uart_config = {
         .baud_rate = UART_2_BAUD_RATE,
         .data_bits = UART_DATA_8_BITS,
         .parity = UART_PARITY_DISABLE,
@@ -42,18 +45,23 @@ bool display_init(Vesc_data_t *vesc_ptr)
         .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
         .source_clk = UART_SCLK_APB,
     };
-    int intr_alloc_flags = 0;
 
-    ESP_ERROR_CHECK(uart_driver_delete(UART_2_PORT_NUM));
-    ESP_ERROR_CHECK(uart_driver_install(UART_2_PORT_NUM, BUF_SIZE * 2, 0, 0, NULL, intr_alloc_flags));
-    ESP_ERROR_CHECK(uart_param_config(UART_2_PORT_NUM, &uart_config));
-    ESP_ERROR_CHECK(uart_set_pin(UART_2_PORT_NUM, UART_2_TXD, UART_2_RXD, UART_2_RTS, UART_2_CTS));
+    /*uart_driver_delete(UART_2_PORT_NUM) == ESP_OK &&*/ // TODO: REMOVE THIS LINE Removed as a test, seems like it's ok when using esp32_dev as board
+    if (uart_driver_install(UART_2_PORT_NUM, BUF_SIZE * 2, 0, 0, NULL, intr_alloc_flags) == ESP_OK &&
+        uart_param_config(UART_2_PORT_NUM, &uart_config) == ESP_OK &&
+        uart_set_pin(UART_2_PORT_NUM, UART_2_TXD_PIN, UART_2_RXD_PIN, UART_2_RTS, UART_2_CTS) == ESP_OK)
+    {
+        return_val = true;
+    }
+
+    set_disp_message("page login");
+
     return return_val;
 }
 
 status_t display_start_task()
 {
-    xTaskCreate(display_task, "display_task", DISPLAY_TASK_STACK_SIZE * 4, NULL, 10, NULL);
+    xTaskCreatePinnedToCore(display_task, "display_task", DISPLAY_TASK_STACK_SIZE * 4, NULL, 10, NULL, 1);
     vTaskDelay(100 / portTICK_PERIOD_MS); //delay to give task a chance to start and change status.
     return display_status;
 }
@@ -61,8 +69,14 @@ status_t display_start_task()
 void display_task(void *pvParameters)
 {
     display_status = STATUS_OK;
-    char *data = (char *)malloc(BUF_SIZE);
     static Vesc_data_t vesc_cpy;
+
+    char *data = (char *)malloc(BUF_SIZE);
+    if (data == NULL)
+    {
+        printf("Could not allocate memory for data in display task\n");
+        display_status = STATUS_ERROR;
+    }
 
     while (1)
     {
@@ -72,7 +86,7 @@ void display_task(void *pvParameters)
         if (len > 1)
         {
             data[len] = '\0';
-            eval_in_data(data);
+            xQueueSend(display_msg_queue, (void *)&data, 10);
         }
 
         //try to take mutex and write data to the vesc struct
@@ -93,13 +107,13 @@ void display_task(void *pvParameters)
         }
         else
         {
-            vTaskDelay(5 / portTICK_PERIOD_MS);
+            vTaskDelay(10 / portTICK_PERIOD_MS);
         }
-        switch (g_curr_page)
+        switch (curr_page)
         {
         case PAGE_MAIN:
             set_disp(MAIN_BATT_VOLTS_DISP, vesc_cpy.voltage);
-            set_disp(MAIN_BATT_AMP_DISP, vesc_cpy.current);
+            set_disp(MAIN_BATT_AMP_DISP, vesc_cpy.current_in);
             set_disp(MAIN_SPEED_DISP, ((((vesc_cpy.erpm / MOTOR_POLEPAIRS) / GEAR_RATIO) * CIRCUMFERENCE) * MINUTES_IN_HOUR) / KILOMETER);
             set_disp(MAIN_RPM_DISP, vesc_cpy.erpm / MOTOR_POLEPAIRS);
             set_disp(MAIN_FET_TEMP_DISP, vesc_cpy.temp_fet);
@@ -121,11 +135,23 @@ void display_task(void *pvParameters)
             break;
         case PAGE_BAT:
             break;
-
+        case PAGE_LOGIN:
+            break;
         default:
             break;
         }
+        vTaskDelay(15 / portTICK_PERIOD_MS);
     }
+}
+
+void display_set_page(page_t page)
+{
+    curr_page = page;
+}
+
+page_t display_get_page(void)
+{
+    return curr_page;
 }
 
 status_t display_get_status(void)
@@ -145,38 +171,39 @@ void set_disp(const char *var, int msg)
     uart_write_bytes(UART_2_PORT_NUM, clear, 3);
 }
 
-void set_disp_message(const char *string, int val)
+void set_disp_message(const char *string)
 {
     const char clear[3] = {0xFF, 0xFF, 0xFF};
     char temp[15] = {0};
 
     uart_write_bytes(UART_2_PORT_NUM, clear, 3);
-    sprintf(temp, "%s%d", string, val);
+    sprintf(temp, "%s", string);
     int size = strlen(temp);
     uart_write_bytes(UART_2_PORT_NUM, temp, size);
     uart_write_bytes(UART_2_PORT_NUM, clear, 3);
 }
 
-void eval_in_data(char *in_data)
+void set_disp_txt(const char *string, int val)
 {
+    const char clear[3] = {0xFF, 0xFF, 0xFF};
+    char temp[15] = {0};
 
-    if (strcmp("b=light", in_data) == 0)
-    {
-        static uint8_t light_state = 0;
-        light_state = (light_state == 0) ? 1 : 0;
-        set_disp(MAIN_LIGHT_BTN_DISP, light_state);
-        io_set_front_light(light_state);
-    }
-    else if (strcmp("p=main", in_data) == 0)
-    {
-        g_curr_page = PAGE_MAIN;
-    }
-    else if (strcmp("p=list", in_data) == 0)
-    {
-        g_curr_page = PAGE_LIST;
-    }
-    else if (strcmp("p=bat", in_data) == 0)
-    {
-        g_curr_page = PAGE_BAT;
-    }
+    uart_write_bytes(UART_2_PORT_NUM, clear, 3);
+    sprintf(temp, "%s\"%d\"", string, val);
+    int size = strlen(temp);
+    uart_write_bytes(UART_2_PORT_NUM, temp, size);
+    uart_write_bytes(UART_2_PORT_NUM, clear, 3);
+}
+
+void display_dim(uint8_t value)
+{
+    dim_value = value;
+    char message[20] = {0};
+    sprintf(message, "dim=%d", value);
+    set_disp_message(message);
+}
+
+uint8_t display_get_dim(void)
+{
+    return dim_value;
 }

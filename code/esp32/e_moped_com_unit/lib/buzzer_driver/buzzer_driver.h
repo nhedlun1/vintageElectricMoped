@@ -3,8 +3,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-bool buzzer_driver_init();
+bool buzzer_init();
 
-bool play_sound(uint8_t sound);
+bool buzzer_play_sound(uint8_t sound);
 
 #endif /*LIGHTS_DRIVER_H*/

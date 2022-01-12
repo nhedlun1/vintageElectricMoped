@@ -11,6 +11,21 @@
         "stdio.h": "c",
         "semphr.h": "c",
         "*.ipp": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "io.h": "c",
+        "cctype": "c",
+        "cstring": "c",
+        "optional": "c",
+        "istream": "c",
+        "ostream": "c",
+        "ratio": "c",
+        "system_error": "c",
+        "array": "c",
+        "functional": "c",
+        "tuple": "c",
+        "type_traits": "c",
+        "utility": "c",
+        "ma_filter.h": "c",
+        "unity.h": "c"
     }
 }

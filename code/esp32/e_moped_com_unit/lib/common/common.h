@@ -5,29 +5,37 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 
+//Pins:
 #define MOT_ENABLE_PIN 12
 #define FRONT_LIGTH_PIN 32
 #define REAR_LIGTH_PIN 33
 #define BUZZER_PIN 15
 #define ONBOARD_LED_PIN 2
+#define UART_2_TXD_PIN 17
+#define UART_2_RXD_PIN 16
 
+//Lighting defines:
 #define OFF 0
 #define ON 1
-#define NORMAL 0
-#define BRAKE 1
+#define BRAKE 2
 
-#define VESC_ID = 0x5F
+//CAN message id's:
+#define MSG_ID_1 0x9
+#define MSG_ID_2 0xE
+#define MSG_ID_3 0xF
+#define MSG_ID_4 0x10
+#define MSG_ID_5 0x1B
 
-//5F == 95 as vesc id
-#define MSG_ID_1 0x95F  //= 0x934 = 100100110100
-#define MSG_ID_2 0xE5F  //= 0xE34 = 111000110100
-#define MSG_ID_3 0xF5F  //= 0xF34 = 111100110100
-#define MSG_ID_4 0x105F //= 0x1034= 0001000000110100
-#define MSG_ID_5 0x1B5F //= 0x1B34= 0001101100110100
+//Buzzer sounds
+#define TUNE_ACCESS_DENIED 0
+#define TUNE_ACCESS_GRANTED 1
+#define TUNE_WARNING 2
+#define TUNE_HORN 3
+#define TUNE_LOCKING 4
 
 /**
- *Nextion display variable names
- *<PAGE>_<VARIABLE>_<DISP>
+ *Nextion display variable names:
+ *<PAGE>_<VARIABLE>_DISP "value"
 */
 #define MAIN_SPEED_DISP "n0"
 #define MAIN_RPM_DISP "n1"
@@ -54,9 +62,9 @@
 #define LIST_BATT_VOLT_DISP "x8"
 #define LIST_TACH_VAL_DISP "n3"
 
-#define MAIN 0
-#define LIST 1
-#define BATT 2
+//Display dim values
+#define DIM_DAY 100
+#define DIM_NIGHT 5
 
 #define WHEEL_RADIUS 0.25f  //Diameter of rear wheel in m
 #define CIRCUMFERENCE 1.57f //PI * 2 * WHEEL_RADIUS
@@ -74,6 +82,7 @@ typedef enum
 
 typedef enum
 {
+    PAGE_LOGIN,
     PAGE_MAIN,
     PAGE_LIST,
     PAGE_BAT
