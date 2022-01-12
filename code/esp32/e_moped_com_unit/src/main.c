@@ -140,7 +140,7 @@ void code_add_digit(char digit)
 
 void eval_in_data(char *in_data)
 {
-    printf("in_data:%s\n", in_data);
+    // printf("in_data:%s\n", in_data);
     if (strcmp("b=light", in_data) == 0)
     {
         uint8_t light_state = io_get_front_light_state();
