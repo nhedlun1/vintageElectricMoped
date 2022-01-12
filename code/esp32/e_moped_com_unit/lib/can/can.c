@@ -4,6 +4,7 @@
 #include "driver/twai.h"
 #include "can.h"
 #include "io.h"
+#include "smoothing.h"
 
 #define READ_TWAI_TASK_STACK_SIZE (1024)
 
@@ -17,10 +18,15 @@ static Vesc_data_t *vesc = NULL;
 
 status_t can_status = STATUS_UNINITIALIZED;
 
+static sm_int_t *vesc_bat_amps_sm = NULL;
+static sm_int_t *vesc_pcb_temp_sm = NULL;
+static sm_int_t *vesc_erpm_sm = NULL;
+
 bool can_init(Vesc_data_t *vesc_ptr)
 {
     bool return_val = false;
     vesc = vesc_ptr;
+
     if (twai_driver_install(&g_config, &t_config, &f_config) == ESP_OK)
     {
         return_val = true;
@@ -28,6 +34,12 @@ bool can_init(Vesc_data_t *vesc_ptr)
     if (twai_start() == ESP_ERR_INVALID_STATE)
     {
         return_val = false;
+    }
+    if (return_val)
+    {
+        vesc_bat_amps_sm = smooth_init_int(0.1f);
+        vesc_pcb_temp_sm = smooth_init_int(0.8f);
+        vesc_erpm_sm = smooth_init_int(0.2f);
     }
     return return_val;
 }
@@ -61,8 +73,10 @@ void read_twai_task(void *pvParameters)
                 switch (msg_id)
                 {
                 case MSG_ID_1:
-                    vesc->erpm = (message.data[3] | (message.data[2] << 8) | (message.data[1] << 16) | (message.data[0] << 24)); // *((int32_t *)message.data);
-                    vesc->current = ((message.data[4] << 8) | message.data[5]);
+                    // vesc->erpm = (message.data[3] | (message.data[2] << 8) | (message.data[1] << 16) | (message.data[0] << 24)); // *((int32_t *)message.data);
+                    // vesc->current = ((message.data[4] << 8) | message.data[5]);
+                    vesc->erpm = smooth_int(vesc_erpm_sm, (int32_t)(message.data[3] | (message.data[2] << 8) | (message.data[1] << 16) | (message.data[0] << 24)));
+                    vesc->current = smooth_int(vesc_bat_amps_sm, (int16_t)((message.data[4] << 8) | message.data[5]));
                     vesc->duty = ((message.data[6] << 8) | message.data[7]);
                     // printf("Status1 = erpm:% 7d  rpm:% 4d current:% 4.2f duty:% 3d%%\n", vesc->erpm, vesc->erpm / 7, (float)vesc->current / 10, vesc->duty / 10);
                     break;
@@ -80,7 +94,8 @@ void read_twai_task(void *pvParameters)
                     break;
 
                 case MSG_ID_4:
-                    vesc->temp_fet = (message.data[0] << 8) | message.data[1];
+                    // vesc->temp_fet = ((message.data[0] << 8) | message.data[1]);
+                    vesc->temp_fet = smooth_int(vesc_pcb_temp_sm, (int16_t)(message.data[0] << 8) | message.data[1]);
                     vesc->temp_motor = (message.data[2] << 8) | message.data[3];
                     vesc->current_in = (message.data[4] << 8) | message.data[5];
                     vesc->pid_pos_now = ((message.data[6] << 8) | message.data[7]);
