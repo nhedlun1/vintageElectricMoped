@@ -34,8 +34,6 @@ $(BUILD_DIR)/%.o: $(LIB_DIR)/$(MODULE)/%.c
 $(BUILD_DIR)/%.o : $(TEST_DIR)/$(MODULE)/%.c
 	$(CC) -MMD $(CFLAGS) -o $@ $(INCLUDES) -c $<
 
-# $(BUILD_DIR)/%.o : $(TEST_DIR)/$(BSP)/%.c
-# 	$(CC) -MMD $(CFLAGS) -o $@ $(INCLUDES) -c $<
 
 check: .mkbuild $(TEST_EXE)
 	@echo ""

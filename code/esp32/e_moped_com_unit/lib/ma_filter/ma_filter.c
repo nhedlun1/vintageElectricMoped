@@ -6,7 +6,7 @@ ma_filter_int_t *ma_init_int(bool has_mean_avg)
     new_ma_filter = malloc(sizeof(ma_filter_int_t) + (NUM_READINGS * sizeof(int)));
     if (new_ma_filter != NULL)
     {
-        new_ma_filter->mean_average = has_mean_avg;
+        new_ma_filter->median_average = has_mean_avg;
         new_ma_filter->val_counter = 0;
         new_ma_filter->full = false;
         for (int i = 0; i < NUM_READINGS; i++)
@@ -23,7 +23,7 @@ ma_filter_float_t *ma_init_float(bool has_mean_avg)
     new_ma_filter = malloc(sizeof(ma_filter_float_t) + (NUM_READINGS * sizeof(float)));
     if (new_ma_filter != NULL)
     {
-        new_ma_filter->mean_average = has_mean_avg;
+        new_ma_filter->median_average = has_mean_avg;
         new_ma_filter->val_counter = 0;
         new_ma_filter->full = false;
         for (int i = 0; i < NUM_READINGS; i++)
@@ -38,7 +38,7 @@ int ma_get_avg_int(ma_filter_int_t *filter)
 {
     int devider = (filter->full) ? NUM_READINGS : filter->val_counter;
     float return_value = 0;
-    if (filter->mean_average && filter->full)
+    if (filter->median_average && filter->full)
     {
         devider = WANTED_READINGS;
         int *temp_arr = malloc(sizeof(int) * NUM_READINGS);
@@ -57,7 +57,7 @@ int ma_get_avg_int(ma_filter_int_t *filter)
             }
         }
 
-        uint8_t start_pos = (NUM_READINGS - WANTED_READINGS) / 2;
+        uint8_t start_pos = (NUM_READINGS - WANTED_READINGS) >> 1; //bit shift right instead of devide by 2.
         for (int i = start_pos; i < WANTED_READINGS + start_pos; i++)
         {
             return_value += temp_arr[i];
@@ -79,7 +79,7 @@ float ma_get_avg_float(ma_filter_float_t *filter)
     float return_value = 0;
     int devider = (filter->full) ? NUM_READINGS : filter->val_counter;
 
-    if (filter->mean_average && filter->full)
+    if (filter->median_average && filter->full)
     {
         devider = WANTED_READINGS;
         float *temp_arr = malloc(sizeof(float) * NUM_READINGS);
@@ -98,7 +98,7 @@ float ma_get_avg_float(ma_filter_float_t *filter)
             }
         }
 
-        uint8_t start_pos = (NUM_READINGS - WANTED_READINGS) / 2;
+        uint8_t start_pos = (NUM_READINGS - WANTED_READINGS) >> 1; //bit shift right instead of devide by 2.
         for (int i = start_pos; i < WANTED_READINGS + start_pos; i++)
         {
             return_value += temp_arr[i];

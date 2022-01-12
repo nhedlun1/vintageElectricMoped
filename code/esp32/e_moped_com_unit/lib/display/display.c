@@ -113,7 +113,7 @@ void display_task(void *pvParameters)
         {
         case PAGE_MAIN:
             set_disp(MAIN_BATT_VOLTS_DISP, vesc_cpy.voltage);
-            set_disp(MAIN_BATT_AMP_DISP, vesc_cpy.current);
+            set_disp(MAIN_BATT_AMP_DISP, vesc_cpy.current_in);
             set_disp(MAIN_SPEED_DISP, ((((vesc_cpy.erpm / MOTOR_POLEPAIRS) / GEAR_RATIO) * CIRCUMFERENCE) * MINUTES_IN_HOUR) / KILOMETER);
             set_disp(MAIN_RPM_DISP, vesc_cpy.erpm / MOTOR_POLEPAIRS);
             set_disp(MAIN_FET_TEMP_DISP, vesc_cpy.temp_fet);
@@ -199,7 +199,7 @@ void display_dim(uint8_t value)
 {
     dim_value = value;
     char message[20] = {0};
-    sprintf(message,"dim=%d", value);
+    sprintf(message, "dim=%d", value);
     set_disp_message(message);
 }
 

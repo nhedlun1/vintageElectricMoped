@@ -12,6 +12,7 @@
 #include "driver/gpio.h"
 #include "login_code.h"
 
+#define BRAKE_CURRENT_LIM -5
 //Vesc_data struct that is filled from CAN-task and read from display-task, locked by a mutex.
 Vesc_data_t vesc = {0};
 
@@ -105,7 +106,8 @@ void app_main(void)
             }
             else
             {
-                if (vesc.current_in <= -5 && io_get_rear_light_state() != OFF)
+                //if the current going into the battery is more than BRAKE_CURRENT_LIM amp, turn on brake light.
+                if (vesc.current_in < BRAKE_CURRENT_LIM && io_get_rear_light_state() != OFF)
                 {
                     io_set_rear_light(BRAKE);
                 }
@@ -140,7 +142,7 @@ void code_add_digit(char digit)
 
 void eval_in_data(char *in_data)
 {
-    printf("in_data:%s\n", in_data);
+    // printf("in_data:%s\n", in_data);
     if (strcmp("b=light", in_data) == 0)
     {
         uint8_t light_state = io_get_front_light_state();
