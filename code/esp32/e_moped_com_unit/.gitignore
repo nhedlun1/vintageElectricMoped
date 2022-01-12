@@ -5,7 +5,7 @@
 .vscode/ipch
 .vscode/dryrun.log
 .vscode/configurationCache.log
-/vscode/targets.log
+.vscode/targets.log
 /lib/common/login_code.h
 /build
 /build_test
