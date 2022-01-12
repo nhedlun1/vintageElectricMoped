@@ -57,7 +57,7 @@ int ma_get_avg_int(ma_filter_int_t *filter)
             }
         }
 
-        uint8_t start_pos = (NUM_READINGS - WANTED_READINGS) / 2;
+        uint8_t start_pos = (NUM_READINGS - WANTED_READINGS) >> 1; //bit shift right instead of devide by 2.
         for (int i = start_pos; i < WANTED_READINGS + start_pos; i++)
         {
             return_value += temp_arr[i];
@@ -98,7 +98,7 @@ float ma_get_avg_float(ma_filter_float_t *filter)
             }
         }
 
-        uint8_t start_pos = (NUM_READINGS - WANTED_READINGS) / 2;
+        uint8_t start_pos = (NUM_READINGS - WANTED_READINGS) >> 1; //bit shift right instead of devide by 2.
         for (int i = start_pos; i < WANTED_READINGS + start_pos; i++)
         {
             return_value += temp_arr[i];

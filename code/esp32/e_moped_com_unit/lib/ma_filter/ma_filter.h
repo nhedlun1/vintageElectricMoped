@@ -18,8 +18,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define NUM_READINGS 8
-#define WANTED_READINGS 6
+#define NUM_READINGS 20
+#define WANTED_READINGS 10
 
 typedef struct
 {
