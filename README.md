@@ -12,7 +12,11 @@ Over a year later, and not too many iterations of my ideas it's finished! More o
 </p>
 <br>
 <br>
-
+<p align="center">
+<img src="pictures/rear_view.jpg" width="650" class="center">
+<p>
+<br>
+<br>
 <p>
 <img src="pictures/motor_without_cover.jpg" width="315" align="left"><img src="pictures/elec_motor_in.jpg" width="315" align="right">
 <p align="center">
@@ -62,6 +66,9 @@ The microcontroller i chosed to use was the teensy 3.2 due to it's speed and bui
 Other parts were sourced mainly because i had them laying around, and they will be replaced by a manufactured PCB when i get the time,
 and when the parts are available. The display i used is a 2.4" touch display from Nextion. I chosed this mainly because i already had it,
 but also due to it's ease of use in these simple cases. 
+
+UPDATE: I designed and had manufactured a custom PCB with a ESP32 as the microcontroller. The PCB has a CAN transceiver and separete p-channel mosfets for lighting. It now also have a signal relay that can be used to enable or disable the motor control board. Im pretty pleased with the result. Next up is either a android app instead of the nextion display, or a webserver hosted by the esp32. The new board is coded with esp-idf instead of Arduino.
+  
 </p> 
 <p align="center">
 <img src="pictures/custom_pcb_in_hadlamp.jpg" width="340">
@@ -89,12 +96,11 @@ Youtube clip:
 <br>
 <br>
 Future plans and improvements:<br>
-- [ x ] Custom PCB with a esp32 as microcontroller, this is mainly to try to get BMS information and display it.<br>
-- [ ] More outputs for lights, and also a on/off signal relay for the motor controller. <br>
-- [ ] A loud buzzer as horn mounted on the pcb.<br>
-- [ ] Motor temperature sensor, the excisting one is not compatible with motor controller. I probably will mount external one.<br>
+Done&check; Design Custom PCB with a esp32 as microcontroller, this is mainly to try to get BMS information and display it.<br>
+Done&check; More outputs for lights, and also a on/off signal relay for the motor controller. <br>
+Done&check; A loud buzzer as horn mounted on the pcb.<br>
+&#9746; Motor temperature sensor, the excisting one is not compatible with motor controller. I probably will mount external one.<br>
 
 <br>
 <br>
 <br>
-NOTE: Almost all pictures are taken during the build and are not neccesarily the end result. :)<br>
