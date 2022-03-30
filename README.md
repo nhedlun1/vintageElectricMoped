@@ -1,7 +1,7 @@
 <h1 align="center">
 The story of how a vintage moped got a new electrified life!
 <br><br>
-<img src="pictures/side_view.jpg" width="650" class="center">
+<img src="pictures/front_side_view.jpg" width="650" class="center">
 </h1>
 
 <p align="center">
@@ -64,8 +64,8 @@ and when the parts are available. The display i used is a 2.4" touch display fro
 but also due to it's ease of use in these simple cases. 
 </p> 
 <p align="center">
-<img src="pictures/CAN_MC_PCB.jpg" width="340">
-<img src="pictures/touch_display.jpg" width="340"> 
+<img src="pictures/custom_pcb_in_hadlamp.jpg" width="340">
+<img src="pictures/new_display.jpg" width="340"> 
 </p>
 <br>
 <br>
@@ -89,10 +89,10 @@ Youtube clip:
 <br>
 <br>
 Future plans and improvements:<br>
--[ ]Custom PCB with a esp32 as microcontroller, this is mainly to try to get BMS information and display it.<br>
--[ ]More outputs for lights, and also a on/off signal relay for the motor controller. <br>
--[ ]A loud buzzer as horn mounted on the pcb.<br>
--[ ]Motor temperature sensor, the excisting one is not compatible with motor controller. I probably will mount external one.<br>
+- [ x ] Custom PCB with a esp32 as microcontroller, this is mainly to try to get BMS information and display it.<br>
+- [ ] More outputs for lights, and also a on/off signal relay for the motor controller. <br>
+- [ ] A loud buzzer as horn mounted on the pcb.<br>
+- [ ] Motor temperature sensor, the excisting one is not compatible with motor controller. I probably will mount external one.<br>
 
 <br>
 <br>
